@@ -1,5 +1,10 @@
+from fastapi import Request, Depends
+
 from fastapi import APIRouter
 from sqlalchemy import select
+
+from app.users.dependencies import get_current_user
+from app.users.models import Users
 from watchfiles import awatch
 
 from app.booking.dao import BookingDAO
@@ -10,18 +15,7 @@ router = APIRouter(
     tags=["Бронирование"]
 )
 
-@router.get("/1")
-async def get_bookings():
-    result = BookingDAO.find_by_id(2)
-    return await result
+@router.get("")
+async def get_bookings(user: Users = Depends(get_current_user)):
+    print(user, type(user), user.email)
 
-@router.get("/2")
-async def get_bookings():
-    result = BookingDAO.find_one_or_none(room_id=1)
-    print(type(result))
-    return await result
-
-@router.get("/3")
-async def get_bookings():
-    result = await BookingDAO.find_all()
-    return result
