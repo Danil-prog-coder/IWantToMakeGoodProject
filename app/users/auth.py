@@ -28,8 +28,11 @@ def create_access_token(data: dict) -> str:
     return encode_jwt
 
 async def authenticate_user(email: EmailStr, password: str):
-    user = UsersDAO.find_one_or_none(email=email)
-    if not user and not verifi_password(password, user.password):
+    print(1)
+    user = await UsersDAO.find_one_or_none(email=email)
+    print(2)
+    if not user or not verifi_password(password, user.hashed_password):
+        print(3)
         return None
     return user
 
