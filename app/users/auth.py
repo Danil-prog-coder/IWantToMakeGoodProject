@@ -1,7 +1,7 @@
 from datetime import datetime
 from http.client import HTTPException
 
-import jwt
+from jose import jwt
 
 from asyncpg.pgproto.pgproto import timedelta
 from passlib.context import CryptContext
@@ -28,11 +28,8 @@ def create_access_token(data: dict) -> str:
     return encode_jwt
 
 async def authenticate_user(email: EmailStr, password: str):
-    print(1)
     user = await UsersDAO.find_one_or_none(email=email)
-    print(2)
     if not user or not verifi_password(password, user.hashed_password):
-        print(3)
         return None
     return user
 

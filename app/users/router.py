@@ -19,16 +19,14 @@ async def register_user(user_data: SUserAuth):
     if exiting_user:
         raise HTTPException(status_code=500)
     hashed_password = get_password_hash(user_data.password)
+    print(5)
     await UsersDAO.add(email=user_data.email, hashed_password=hashed_password)
 
 @router.post("/login")
 async def login_user(response: Response, user_data: SUserAuth):
-    print(4)
     user = await authenticate_user(user_data.email, user_data.password)
-    print(5)
     if not user:
         raise HTTPException(401)
-    print(6)
     access_token = create_access_token({"sub": str(user.id)})
     response.set_cookie("booking_access_token", access_token, httponly=True)
     return access_token
